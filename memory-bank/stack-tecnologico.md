@@ -30,3 +30,14 @@ Puertos publicados: `8000` (API) y `5678` (debug). La documentación interactiva
 ## Arranque
 
 `docker compose up --build`.
+
+## Dependencias clave:
+
+  "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.8.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "recharts": "^3.8.1",
+    "tailwind-merge": "^3.5.0"

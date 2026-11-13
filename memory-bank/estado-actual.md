@@ -17,3 +17,7 @@ El dashboard funciona contra datos mock deterministas. No hay persistencia ni us
 - Las reglas aplicables están en `.agents/rules/`.
 - No hay skills en `.agents/skills`.
 - Este banco de memoria acaba de crearse. No sustituye a esas reglas.
+
+## Estado Actual 
+
+* Reglas de cors validadas y acceso protegido
