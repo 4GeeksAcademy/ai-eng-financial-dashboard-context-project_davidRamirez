@@ -343,7 +343,7 @@ def get_metrics_comparison(
 def get_metrics_alerts(
     threshold: float = Query(default=0.3, ge=0),
     group_by: GroupBy = Query(default="month"),
-    start_date: date @router.get| None = Query(default=None),
+    start_date: date| None = Query(default=None),
     end_date: date | None = Query(default=None),
     business_type: BusinessType | None = Query(default=None),
 ) -> list[MetricsAlert]:
@@ -375,7 +375,8 @@ def get_b2b_metrics(
     return ensure_chronological_order(filtered)
 
 
-("/api/metrics/b2c", response_model=list[FinancialMovement])
+
+@router.get("/api/metrics/b2c", response_model=list[FinancialMovement])
 def get_b2c_metrics(
     start_date: date | None = Query(default=None),
     end_date: date | None = Query(default=None),
