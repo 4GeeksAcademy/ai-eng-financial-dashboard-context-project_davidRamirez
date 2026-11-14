@@ -1,10 +1,10 @@
 ## Verificación de resumen
 
   * Comprobacion de rutas clave  ✅
-  * Se intenta correr el programa con los comandos que indica ❌
+  * Se intenta correr el programa con los comandos que indica ✅
   * Se le indica al agente corregir puertos para poder visualizar el proyecto. ✅
-
   * Se consigue visualizar el frontend pero no el backend
+  * Marca afirmaciones de API verificadas en /docs ✅
 
 ## Patrones arriesgados que conviene vigilar
 
@@ -58,5 +58,14 @@ Estas son advertencias para orientar cambios futuros; no implican que haya que m
 
  * DX :            -Mantener coherencia en el flujo de trabajo y asegurar la 
                     cosistencia de desarrollo local para garantizar el entorno para el equipo.               
-                                    
+
+
+
+## Guía específica:
+
+- Antes de redactar specs, inspecciona la documentación interactiva de FastAPI en [`/docs`](https://glorious-journey-j4jvw65prwgcqrjp-8000.app.github.dev/docs).
+- Revisa el código frontend relevante: llamadas a la API, tipos de datos y cálculos que usan la respuesta.
+- Contrasta la spec con las rutas y modelos del backend; no deduzcas el contrato únicamente desde la UI.
+- Si [`/docs`](https://glorious-journey-j4jvw65prwgcqrjp-8000.app.github.dev/docs). no está disponible, indícalo y usa las rutas/modelos del backend como evidencia provisional.
+- Señala cualquier discrepancia entre la documentación, el backend y el frontend antes de proponer requisitos.
 

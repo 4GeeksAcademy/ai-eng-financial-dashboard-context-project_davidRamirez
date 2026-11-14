@@ -1,0 +1,19 @@
+{
+  "operation_types": [
+    "income",
+    "outcome"
+  ],
+  "business_types": [
+    "B2B",
+    "B2C"
+  ],
+  "categories": [
+    "administrative",
+    "operational",
+    "others",
+    "sales",
+    "suppliers"
+  ],
+  "min_date": "2025-11-01",
+  "max_date": "2026-10-28"
+}
