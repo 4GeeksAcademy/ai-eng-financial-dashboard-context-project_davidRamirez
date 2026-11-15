@@ -69,3 +69,107 @@ Estas son advertencias para orientar cambios futuros; no implican que haya que m
 - Si [`/docs`](https://glorious-journey-j4jvw65prwgcqrjp-8000.app.github.dev/docs). no está disponible, indícalo y usa las rutas/modelos del backend como evidencia provisional.
 - Señala cualquier discrepancia entre la documentación, el backend y el frontend antes de proponer requisitos.
 
+## Por funcionalidad, pasa el outcome del PM como prompt — deja que el agent proponga tipos, componentes y casos límite.
+
+* Implementa una funcionalidad de alertas de anomalías de gastos debajo de los gráficos del dashboard.
+
+* Antes de implementar, propón los tipos, componentes y casos límite que consideres adecuados. Después, integra la solución con los patrones y el contrato existentes en el proyecto.
+
+* Consulta GET /api/metrics/alerts?threshold=<ratio> y añade un input numérico para configurar el umbral: mínimo 0.01, máximo 1.0, predeterminado 0.3.
+* Muestra una tabla con estas cuatro columnas: Período, Gasto registrado, Media móvil de los 3 períodos anteriores y Diferencia porcentual.
+* Calcula la media móvil como (gasto de los 3 períodos anteriores) / 3. Calcula la diferencia porcentual como ((gasto actual - media móvil) / media móvil) × 100. El gasto actual supera el umbral cuando su diferencia porcentual es mayor que el ratio configurado; por ejemplo, 0.3 equivale a 30%.
+* Respeta el rango de fechas activo en el dashboard para los períodos mostrados. Considera cómo obtener los tres períodos previos cuando el rango empieza a mitad del historial.
+* Si no hay anomalías para el umbral y rango actuales, muestra un mensaje explícito de estado vacío; no ocultes la tabla.
+* Define y explica cómo manejar períodos con menos de tres valores anteriores o media móvil igual a cero.
+Al terminar, resume la fórmula usada, las decisiones sobre casos límite y las verificaciones ejecutadas.
+
+## RESPUESTASTA DE LA API
+
+curl -X 'GET' \
+  'https://glorious-journey-j4jvw65prwgcqrjp-8000.app.github.dev/api/metrics/alerts?threshold=0.3&group_by=month' \
+  -H 'accept: */*'
+
+  * Request URL: https://glorious-journey-j4jvw65prwgcqrjp-8000.app.github.dev/api/metrics/alerts?threshold=0.3&group_by=month
+
+CODE:200
+
+# Response body
+
+  [
+  {
+    "period": "2026-03",
+    "outcome_total": 88076.9,
+    "baseline_average": 59977.58,
+    "increase_ratio": 0.4685
+  },
+  {
+    "period": "2026-06",
+    "outcome_total": 80212.01,
+    "baseline_average": 60192.76,
+    "increase_ratio": 0.3326
+  },
+  {
+    "period": "2026-08",
+    "outcome_total": 82189.37,
+    "baseline_average": 60515.75,
+    "increase_ratio": 0.3581
+  }
+]
+
+# Response headers
+
+ cache-control: no-cache,no-store 
+ content-length: 294 
+ content-type: application/json 
+ date: Sun,15 Nov 2026 15:12:57 GMT 
+ expires: Thu,01 Jan 1970 00:00:00 GMT 
+ pragma: no-cache 
+ ratelimit-limit: HttpRequestRatePerPort:1500/m 
+ ratelimit-remaining: HttpRequestRatePerPort:1499 
+ ratelimit-reset: HttpRequestRatePerPort:53s 
+ referrer-policy: same-origin 
+ strict-transport-security: max-age=31536000; includeSubDomains 
+ vary: Origin 
+ vssaas-request-id: f2e022de-4d81-4e7f-9852-7a18c67b6fa6 
+ x-content-type-options: nosniff 
+ x-ms-ratelimit-limit: 1500 
+ x-ms-ratelimit-remaining: 1499 
+ x-ms-ratelimit-reset: 0 
+ x-ms-ratelimit-used: 1 
+ x-report-abuse: https://msrc.microsoft.com/report/abuse 
+ x-robots-tag: noindex,nofollow 
+ x-served-by: tunnels-prod-rel-uks1-v3-cluster 
+
+ ## Successful Response
+
+CODE: 200
+
+ 	Aplicacíon JSON:
+
+  [
+  {
+    "period": "string",
+    "outcome_total": 0,
+    "baseline_average": 0,
+    "increase_ratio": 0
+  }
+]
+
+## Validation Error
+
+aplicaion json 
+
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string",
+      "input": "string",
+      "ctx": {}
+    }
+  ]
+}
