@@ -83,7 +83,7 @@ Estas son advertencias para orientar cambios futuros; no implican que haya que m
 * Define y explica cómo manejar períodos con menos de tres valores anteriores o media móvil igual a cero.
 Al terminar, resume la fórmula usada, las decisiones sobre casos límite y las verificaciones ejecutadas.
 
-## RESPUESTASTA DE LA API
+## RESPUESTA DE LA API
 
 curl -X 'GET' \
   'https://glorious-journey-j4jvw65prwgcqrjp-8000.app.github.dev/api/metrics/alerts?threshold=0.3&group_by=month' \
@@ -173,3 +173,138 @@ aplicaion json
     }
   ]
 }
+
+## RESPUESTA DE LA API 
+
+* GET /api/metrics/categories/top?operation_type=income&limit=5 
+
+CURL
+
+curl -X 'GET' \
+  'https://glorious-journey-j4jvw65prwgcqrjp-8000.app.github.dev/api/metrics/categories/top?operation_type=outcome&limit=5' \
+  -H 'accept: */*'
+
+URL
+
+  https://glorious-journey-j4jvw65prwgcqrjp-8000.app.github.dev/api/metrics/categories/top?operation_type=outcome&limit=5
+
+CODE 200 
+
+	
+Response body
+
+[
+  {
+    "category": "others",
+    "operation_type": "outcome",
+    "total_amount": 224428.44
+  },
+  {
+    "category": "operational",
+    "operation_type": "outcome",
+    "total_amount": 196093.22
+  },
+  {
+    "category": "administrative",
+    "operation_type": "outcome",
+    "total_amount": 188143.37
+  },
+  {
+    "category": "suppliers",
+    "operation_type": "outcome",
+    "total_amount": 153467.23
+  }
+]
+
+Successful Response
+
+CODE 200
+
+JSON
+
+[
+  {
+    "category": "suppliers",
+    "operation_type": "income",
+    "total_amount": 0
+  }
+]
+
+# VALIDACION DE ERROR 
+
+CODE 422
+
+{
+  "detail": [
+    {
+      "loc": [
+        "string",
+        0
+      ],
+      "msg": "string",
+      "type": "string",
+      "input": "string",
+      "ctx": {}
+    }
+  ]
+}
+
+
+* GET /api/metrics/facets
+
+CURL
+
+curl -X 'GET' \
+  'https://glorious-journey-j4jvw65prwgcqrjp-8000.app.github.dev/api/metrics/facets' \
+  -H 'accept: */*'
+
+Request URL
+
+https://glorious-journey-j4jvw65prwgcqrjp-8000.app.github.dev/api/metrics/facets
+
+CODE
+
+200 
+	
+Response body
+
+{
+  "operation_types": [
+    "income",
+    "outcome"
+  ],
+  "business_types": [
+    "B2B",
+    "B2C"
+  ],
+  "categories": [
+    "administrative",
+    "operational",
+    "others",
+    "sales",
+    "suppliers"
+  ],
+  "min_date": "2025-11-01",
+  "max_date": "2026-10-28"
+}
+
+Responses
+
+Code	
+200	
+ 
+
+{
+  "operation_types": [
+    "income"
+  ],
+  "business_types": [
+    "B2B"
+  ],
+  "categories": [
+    "suppliers"
+  ],
+  "min_date": "2026-11-15",
+  "max_date": "2026-11-15"
+}
+
