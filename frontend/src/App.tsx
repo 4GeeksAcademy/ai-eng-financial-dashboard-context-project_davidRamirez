@@ -3,6 +3,7 @@ import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { KPIRow } from "@/components/dashboard/kpi-row";
 import { IncomeOutcomeChart } from "@/components/dashboard/income-outcome-chart";
 import { ProfitPercentChart } from "@/components/dashboard/profit-percent-chart";
+import { BusinessComparisonPage } from "@/components/dashboard/business-comparison-page";
 import {
   type FinancialMovement,
   type KPIMetrics,
@@ -62,6 +63,9 @@ async function fetchOutcomeAlerts(
 }
 
 function App() {
+  const [activePage, setActivePage] = useState<"dashboard" | "comparison">(
+    "dashboard",
+  );
   const [metrics, setMetrics] = useState<KPIMetrics | null>(null);
   const [monthlyData, setMonthlyData] = useState<MonthlyDataPoint[]>([]);
   const [outcomeAlerts, setOutcomeAlerts] = useState<MetricsAlert[]>([]);
@@ -150,6 +154,40 @@ function App() {
         <div className="flex flex-col gap-8">
           <DashboardHeader period="2024 - Full Year" />
 
+          <nav
+            aria-label="Dashboard pages"
+            className="flex flex-wrap gap-2 border-b border-border pb-3"
+          >
+            <button
+              type="button"
+              aria-current={activePage === "dashboard" ? "page" : undefined}
+              onClick={() => setActivePage("dashboard")}
+              className={`rounded-md px-4 py-2 text-sm font-medium ${
+                activePage === "dashboard"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              Financial overview
+            </button>
+            <button
+              type="button"
+              aria-current={activePage === "comparison" ? "page" : undefined}
+              onClick={() => setActivePage("comparison")}
+              className={`rounded-md px-4 py-2 text-sm font-medium ${
+                activePage === "comparison"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              B2B vs B2C
+            </button>
+          </nav>
+
+          {activePage === "comparison" ? (
+            <BusinessComparisonPage />
+          ) : (
+            <>
           <form
             onSubmit={applyDateFilter}
             className="flex flex-col gap-4 rounded-lg border border-border p-4 sm:flex-row sm:items-end"
@@ -288,6 +326,8 @@ function App() {
               </table>
             </div>
           </section>
+            </>
+          )}
         </div>
       </div>
     </main>
