@@ -6,11 +6,13 @@ import { ProfitPercentChart } from "@/components/dashboard/profit-percent-chart"
 import {
   type FinancialMovement,
   type KPIMetrics,
+  type MetricsAlert,
   type MonthlyDataPoint,
 } from "@/lib/financial-types";
 import { computeKPIs, computeMonthlyData } from "@/lib/financial-utils";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
+const DEFAULT_ALERT_THRESHOLD = "0.3";
 
 interface MetricsDateRange {
   min_date: string;
@@ -42,22 +44,49 @@ async function fetchMetricsDateRange(): Promise<MetricsDateRange> {
   return response.json();
 }
 
+async function fetchOutcomeAlerts(
+  threshold: number,
+  startDate = "",
+  endDate = "",
+): Promise<MetricsAlert[]> {
+  const params = new URLSearchParams({ threshold: String(threshold) });
+  if (startDate) params.set("start_date", startDate);
+  if (endDate) params.set("end_date", endDate);
+  const response = await fetch(
+    `${API_BASE_URL}/api/metrics/alerts?${params.toString()}`,
+  );
+  if (!response.ok) {
+    throw new Error(`Failed to fetch outcome alerts: ${response.status}`);
+  }
+  return response.json();
+}
+
 function App() {
   const [metrics, setMetrics] = useState<KPIMetrics | null>(null);
   const [monthlyData, setMonthlyData] = useState<MonthlyDataPoint[]>([]);
+  const [outcomeAlerts, setOutcomeAlerts] = useState<MetricsAlert[]>([]);
   const [availableDateRange, setAvailableDateRange] =
     useState<MetricsDateRange | null>(null);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [appliedStartDate, setAppliedStartDate] = useState("");
+  const [appliedEndDate, setAppliedEndDate] = useState("");
+  const [alertThreshold, setAlertThreshold] = useState(DEFAULT_ALERT_THRESHOLD);
   const [loading, setLoading] = useState(true);
+  const [alertsLoading, setAlertsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    Promise.all([fetchFinancialData(), fetchMetricsDateRange()])
-      .then(([movements, dateRange]) => {
+    Promise.all([
+      fetchFinancialData(),
+      fetchMetricsDateRange(),
+      fetchOutcomeAlerts(Number(DEFAULT_ALERT_THRESHOLD)),
+    ])
+      .then(([movements, dateRange, alerts]) => {
         setMetrics(computeKPIs(movements));
         setMonthlyData(computeMonthlyData(movements));
         setAvailableDateRange(dateRange);
+        setOutcomeAlerts(alerts);
       })
       .catch(() => {
         setError(
@@ -66,23 +95,52 @@ function App() {
       })
       .finally(() => {
         setLoading(false);
+        setAlertsLoading(false);
       });
   }, []);
 
   async function applyDateFilter(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
+    setAlertsLoading(true);
     setError(null);
     try {
-      const movements = await fetchFinancialData(startDate, endDate);
+      const [movements, alerts] = await Promise.all([
+        fetchFinancialData(startDate, endDate),
+        fetchOutcomeAlerts(Number(alertThreshold), startDate, endDate),
+      ]);
       setMetrics(computeKPIs(movements));
       setMonthlyData(computeMonthlyData(movements));
+      setOutcomeAlerts(alerts);
+      setAppliedStartDate(startDate);
+      setAppliedEndDate(endDate);
     } catch {
       setError(
         "No se pudo cargar la informacion financiera. Revisa la API de backend.",
       );
     } finally {
       setLoading(false);
+      setAlertsLoading(false);
+    }
+  }
+
+  async function applyAlertThreshold(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setAlertsLoading(true);
+    setError(null);
+    try {
+      const alerts = await fetchOutcomeAlerts(
+        Number(alertThreshold),
+        appliedStartDate,
+        appliedEndDate,
+      );
+      setOutcomeAlerts(alerts);
+    } catch {
+      setError(
+        "No se pudo cargar la informacion financiera. Revisa la API de backend.",
+      );
+    } finally {
+      setAlertsLoading(false);
     }
   }
 
@@ -146,10 +204,103 @@ function App() {
             <IncomeOutcomeChart data={monthlyData} loading={loading} />
             <ProfitPercentChart data={monthlyData} loading={loading} />
           </section>
+
+          <section
+            aria-label="Unexpected spending alerts"
+            className="rounded-lg border border-border p-4"
+          >
+            <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2 className="text-base font-semibold">
+                  Unexpected spending increases
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Periods where outcome exceeds the previous three-period average.
+                </p>
+              </div>
+              <form
+                onSubmit={applyAlertThreshold}
+                className="flex items-end gap-3"
+              >
+                <label className="flex flex-col gap-1 text-sm">
+                  <span>Alert threshold (ratio)</span>
+                  <input
+                    type="number"
+                    min="0.01"
+                    max="1"
+                    step="0.01"
+                    required
+                    value={alertThreshold}
+                    onChange={(event) => setAlertThreshold(event.target.value)}
+                    className="w-32 rounded-md border border-input bg-background px-3 py-2 text-foreground"
+                  />
+                </label>
+                <button
+                  type="submit"
+                  disabled={alertsLoading || loading}
+                  className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Update alerts
+                </button>
+              </form>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="border-b border-border text-muted-foreground">
+                  <tr>
+                    <th scope="col" className="px-3 py-2">Period</th>
+                    <th scope="col" className="px-3 py-2">Recorded outcome</th>
+                    <th scope="col" className="px-3 py-2">Previous 3-period average</th>
+                    <th scope="col" className="px-3 py-2">Percentage increase</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {alertsLoading ? (
+                    <tr>
+                      <td colSpan={4} className="px-3 py-6 text-center text-muted-foreground">
+                        Loading alerts...
+                      </td>
+                    </tr>
+                  ) : outcomeAlerts.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="px-3 py-6 text-center text-muted-foreground">
+                        No spending anomalies detected for the current threshold and date range.
+                      </td>
+                    </tr>
+                  ) : (
+                    outcomeAlerts.map((alert) => (
+                      <tr key={alert.period} className="border-b border-border/60 last:border-0">
+                        <td className="px-3 py-3">{alert.period}</td>
+                        <td className="px-3 py-3">
+                          {formatAlertCurrency(alert.outcome_total)}
+                        </td>
+                        <td className="px-3 py-3">
+                          {formatAlertCurrency(alert.baseline_average)}
+                        </td>
+                        <td className="px-3 py-3">
+                          {(alert.increase_ratio * 100).toFixed(2)}%
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </section>
         </div>
       </div>
     </main>
   );
+}
+
+function formatAlertCurrency(value: number): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
 }
 
 export default App;
