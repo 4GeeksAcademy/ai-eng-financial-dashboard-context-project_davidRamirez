@@ -135,7 +135,9 @@ function CategoryTable({ business }: { business: BusinessIncome }) {
   return (
     <Card className="border-border/60">
       <CardHeader>
-        <CardTitle>{business.businessType} income</CardTitle>
+        <h3 className="leading-none font-semibold">
+          {business.businessType} income
+        </h3>
         <CardDescription>
           Top 5 income categories · Total income:{" "}
           {formatCurrency(business.totalIncome)}
@@ -257,11 +259,11 @@ export function BusinessComparisonPage() {
     : [];
 
   return (
-    <section aria-labelledby="business-comparison-title" className="flex flex-col gap-6">
+    <section id="dashboard-content" tabIndex={-1} aria-labelledby="business-comparison-title" className="flex flex-col gap-6">
       <div>
-        <h1 id="business-comparison-title" className="text-2xl font-semibold">
+        <h2 id="business-comparison-title" className="text-2xl font-semibold">
           Business income comparison
-        </h1>
+        </h2>
         <p className="text-sm text-muted-foreground">
           Compare income performance across B2B and B2C.
         </p>
@@ -349,7 +351,12 @@ export function BusinessComparisonPage() {
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={280}>
-              <BarChart data={chartData} margin={{ top: 8, right: 12, left: 8, bottom: 8 }}>
+              <BarChart
+                data={chartData}
+                title="Total income by business line"
+                desc="Compare B2B and B2C income. Use the arrow keys to explore data points."
+                margin={{ top: 8, right: 12, left: 8, bottom: 8 }}
+              >
                 <CartesianGrid
                   strokeDasharray="3 3"
                   stroke="var(--color-border)"

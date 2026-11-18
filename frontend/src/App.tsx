@@ -150,6 +150,12 @@ function App() {
 
   return (
     <main className="dark min-h-screen bg-background text-foreground">
+      <a
+        href="#dashboard-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:border focus:border-border focus:bg-background focus:px-4 focus:py-2 focus:text-foreground"
+      >
+        Skip to dashboard content
+      </a>
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-8">
           <DashboardHeader period="2024 - Full Year" />
@@ -189,6 +195,8 @@ function App() {
           ) : (
             <>
           <form
+            id="dashboard-content"
+            tabIndex={-1}
             onSubmit={applyDateFilter}
             className="flex flex-col gap-4 rounded-lg border border-border p-4 sm:flex-row sm:items-end"
           >
@@ -226,7 +234,7 @@ function App() {
           </form>
 
           {error ? (
-            <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
+            <div role="alert" className="rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive-foreground">
               {error}
             </div>
           ) : null}
@@ -245,6 +253,7 @@ function App() {
 
           <section
             aria-label="Unexpected spending alerts"
+            aria-busy={alertsLoading}
             className="rounded-lg border border-border p-4"
           >
             <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -282,6 +291,16 @@ function App() {
                 </button>
               </form>
             </div>
+
+            <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+              {error
+                ? ""
+                : alertsLoading
+                  ? "Loading outcome alerts."
+                  : outcomeAlerts.length === 0
+                    ? "No outcome alerts for the current threshold and date range."
+                    : `${outcomeAlerts.length} outcome alert${outcomeAlerts.length === 1 ? "" : "s"} loaded.`}
+            </p>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
