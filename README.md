@@ -39,7 +39,15 @@ _Financial metrics dashboard with a React + TypeScript frontend and a FastAPI ba
 ## How to run locally
 
 ```bash
-docker compose up --build
+./start-services.sh
+```
+
+The script builds and starts the backend, then the frontend, in the background.
+You can also start them manually:
+
+```bash
+docker compose up -d --build backend
+docker compose up -d --build frontend
 ```
 
 The frontend uses the Vite proxy for `/api` by default, so no extra environment variables are required in local development or Codespaces.

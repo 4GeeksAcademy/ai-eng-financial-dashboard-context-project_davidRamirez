@@ -39,7 +39,15 @@ _Dashboard de métricas financieras con frontend en React + TypeScript y backend
 ## Cómo ejecutar en local
 
 ```bash
-docker compose up --build
+./start-services.sh
+```
+
+El script construye y levanta el backend y luego el frontend en segundo plano.
+También puedes iniciar ambos manualmente:
+
+```bash
+docker compose up -d --build backend
+docker compose up -d --build frontend
 ```
 
 El frontend usa por defecto el proxy de Vite para `/api`, así que no necesitas variables de entorno extra ni en desarrollo local ni en Codespaces.
