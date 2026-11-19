@@ -8,12 +8,40 @@
       "skillPath": "skills/accessibility/SKILL.md",
       "computedHash": "c668809f5df57feb87cc06f1bc37fb340d1d92e26bacb6edbeab9258d22e76a5"
     },
+    "developer-docs-structure-audit": {
+      "source": "samber/developer-relations-skills",
+      "commit": "c3a1b6912791539567727723baf626b4fec5ac7a",
+      "sourceType": "github",
+      "skillPath": "skills/developer-docs-structure-audit/SKILL.md",
+      "computedHash": "b8060f1bf1a2653b3b0294a9f487516ff6887f2c7a57fd9177e9a24e50cf5322"
+    },
+    "seo-audit": {
+      "source": "coreyhaines31/marketingskills",
+      "commit": "73573e94a06a39965978b3fa1f9c1eace8cebc7c",
+      "sourceType": "github",
+      "skillPath": "skills/seo-audit/SKILL.md",
+      "computedHash": "37ac5512c83e37dea45ba4a1d8075623812df56db712b2461509d79b5599881e"
+    },
+    "typescript-advanced-types": {
+      "source": "wshobson/agents",
+      "commit": "42203085cfc5736204bf0f6d436dff7e1da0bf3f",
+      "sourceType": "github",
+      "skillPath": "plugins/javascript-typescript/skills/typescript-advanced-types/SKILL.md",
+      "computedHash": "34c5b3863fde1fc85981ac583ecaf0140471b374d0b7002ac5bc0bea2cf38b24"
+    },
     "vercel-react-best-practices": {
       "source": "vercel-labs/agent-skills",
       "commit": "1a2c79d4e6c4a2283dc2c614b6538cbe1ed5ca62",
       "sourceType": "github",
       "skillPath": "skills/react-best-practices/SKILL.md",
       "computedHash": "7991ed4fbecdac23f47c1a40c243e00a212a9e7f3604db93959b3ae11dffe299"
+    },
+    "webapp-testing": {
+      "source": "anthropics/skills",
+      "commit": "e4bb5d960d87126ff3b3a8af1a104b7db67560ba",
+      "sourceType": "github",
+      "skillPath": "skills/webapp-testing/SKILL.md",
+      "computedHash": "48cd9a742a59250edec6db89cf081ef5465f365e2133f6d6c5e29c380b754b7d"
     }
   }
 }
