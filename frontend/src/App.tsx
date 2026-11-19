@@ -4,6 +4,7 @@ import { KPIRow } from "@/components/dashboard/kpi-row";
 import { IncomeOutcomeChart } from "@/components/dashboard/income-outcome-chart";
 import { ProfitPercentChart } from "@/components/dashboard/profit-percent-chart";
 import { BusinessComparisonPage } from "@/components/dashboard/business-comparison-page";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   type FinancialMovement,
   type KPIMetrics,
@@ -225,12 +226,11 @@ function App() {
             >
               Apply
             </button>
-            {availableDateRange ? (
-              <p className="text-sm text-muted-foreground sm:ml-auto sm:pb-2">
-                Available range: {availableDateRange.min_date} –{" "}
-                {availableDateRange.max_date}
-              </p>
-            ) : null}
+            <p className="min-h-10 text-sm text-muted-foreground sm:ml-auto sm:pb-2 lg:min-h-7">
+              {availableDateRange
+                ? `Available range: ${availableDateRange.min_date} – ${availableDateRange.max_date}`
+                : null}
+            </p>
           </form>
 
           {error ? (
@@ -313,12 +313,14 @@ function App() {
                   </tr>
                 </thead>
                 <tbody>
-                  {alertsLoading ? (
-                    <tr>
-                      <td colSpan={4} className="px-3 py-6 text-center text-muted-foreground">
-                        Loading alerts...
-                      </td>
-                    </tr>
+                  {alertsLoading && outcomeAlerts.length === 0 ? (
+                    Array.from({ length: 3 }, (_, index) => (
+                      <tr key={`loading-${index}`}>
+                        <td colSpan={4} className="px-3 py-3">
+                          <Skeleton className="h-5 w-full" />
+                        </td>
+                      </tr>
+                    ))
                   ) : outcomeAlerts.length === 0 ? (
                     <tr>
                       <td colSpan={4} className="px-3 py-6 text-center text-muted-foreground">

@@ -53,6 +53,14 @@ docker compose up -d --build frontend
 The frontend uses the Vite proxy for `/api` by default, so no extra environment variables are required in local development or Codespaces.
 If you need to target a different backend origin, copy `frontend/.env.example` to `.env` and set `VITE_API_BASE_URL`.
 
+### Production frontend image
+
+```bash
+docker build --target production -t financial-dashboard-frontend ./frontend
+```
+
+The image serves the static build on port `8080` with unprivileged Nginx and forwards `/api/` to `backend:8000`. Connect the container to a network where the backend resolves under that name. Compose continues to use the development target.
+
 - Frontend: http://localhost:5173
 - Backend: http://localhost:8000
 - API documentation: http://localhost:8000/docs

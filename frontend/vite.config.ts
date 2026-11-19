@@ -6,6 +6,20 @@ import path from "node:path";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            {
+              name: "charts",
+              test: /[\\/]node_modules[\\/](?:recharts|d3-[^\\/]+|victory-vendor)[\\/]/,
+            },
+          ],
+        },
+      },
+    },
+  },
   server: {
     host: "0.0.0.0",
     proxy: {
