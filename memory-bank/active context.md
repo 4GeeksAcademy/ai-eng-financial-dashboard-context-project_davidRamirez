@@ -245,3 +245,7 @@ Matiz: el test de alertas comprueba el código 200 y la forma de la respuesta. N
 ## Agentes
 
 `AGENTS.md` pide `.agents/rules`, `.agents/skills` y `memory-bank`. Esos directorios no existen en el repo.
+
+## Overiew del producto:
+
+Dash board financiero diseñado para procesamiento de metricas contables garantizando seguridad mediante politica cors estrictas, añadiendo un sistema de backend modular para un rendimiento seguro y eficiente.
