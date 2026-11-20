@@ -19,3 +19,29 @@
 - `.agents/skills/vercel-react-best-practices/SKILL.md`: skill de buenas prácticas React de Vercel, copiada al workspace para GitHub Copilot.
 
 Ambas se instalaron con `npx skills add`; no se redactaron desde cero.
+
+*  instalada de acuerdo al punto 4
+
+    -skill 1: 
+              * sirve para incorporar capacidades agentes de
+                inteligencia    
+                artificial, sirve para conectar mi proyecto con lenguaje de programacion avanzados para automatizar tareas, generar codigo o agentes 
+
+    "webapp-testing": {
+      "source": "anthropics/skills",
+      "commit": "e4bb5d960d87126ff3b3a8af1a104b7db67560ba",
+      "sourceType": "github",
+      "skillPath": "skills/webapp-testing/SKILL.md",
+      "computedHash": "48cd9a742a59250edec6db89cf081ef5465f365e2133f6d6c5e29c380b754b7d" 
+
+    - instalada de acuerdo al punto 4
+
+    -skill 2: 
+              * proporciona diseño de interface avanzado para la estetica y funcionalidad del dashboard,
+    
+    "design": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "commit": "2de1134dc4d1cfe112934611ae5803ae17a1bd7e",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/design/SKILL.md",
+      "computedHash": "b0500382bb6aa23e200d20f4aa7e8ffc4bc0831b56615e174ab0a54b3f3d3e46"
