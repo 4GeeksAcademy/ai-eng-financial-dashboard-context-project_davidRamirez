@@ -51,15 +51,20 @@ docker compose up -d --build frontend
 ```
 
 El frontend usa por defecto el proxy de Vite para `/api`, así que no necesitas variables de entorno extra ni en desarrollo local ni en Codespaces.
-Si necesitas apuntar a otro backend, copia `frontend/.env.example` como `.env` y define `VITE_API_BASE_URL`.
+Si necesitas apuntar a otro backend durante el desarrollo, define `VITE_API_BASE_URL` en `frontend/.env.local` con una URL accesible desde el navegador, por ejemplo `http://localhost:8000`.
 
-### Imagen de frontend para producción
+### Despliegue en contenedores
 
 ```bash
 docker build --target production -t financial-dashboard-frontend ./frontend
 ```
 
-La imagen sirve el build estático en el puerto `8080` con Nginx sin privilegios y reenvía `/api/` a `backend:8000`. Al desplegarla, conecta el contenedor a una red donde el backend sea resoluble con ese nombre. Compose continúa usando el target de desarrollo.
+1. Construye la imagen de frontend con el comando anterior y publícala en el registro usado por tu plataforma de contenedores.
+2. Ejecuta el contenedor exponiendo el puerto `8080`.
+3. Conecta frontend y backend a una red donde la API resuelva como `backend:8000`; Nginx reenvía `/api/` a ese nombre.
+4. Verifica `GET /api/metrics` a través del frontend y `/health` y `/docs` directamente en el backend.
+
+El repositorio define un target de producción solo para el frontend y no selecciona un proveedor de hosting. `docker-compose.yml` es de desarrollo; el `backend/Dockerfile` inicia `debugpy` y Uvicorn con `--reload`, y el backend permite todos los orígenes CORS junto con credenciales. Por eso, el despliegue completo del backend aún requiere una imagen/configuración de producción y una política CORS restringida. No uses la configuración actual del backend como despliegue de producción.
 
 - Frontend: http://localhost:5173
 - Backend: http://localhost:8000
